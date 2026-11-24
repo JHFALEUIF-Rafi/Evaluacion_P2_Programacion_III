@@ -106,6 +106,7 @@ Después de registrar, editar, eliminar o votar, actualizar las vistas afectadas
 5. Completar la tabla de aportes. Cualquier integrante debe poder ejecutar el programa y explicar la colaboración del equipo.
 
 | Integrante | Usuario GitHub | Mensaje de commit |
+|---|---|---|
 |Ariel Arauz|ArieGit2007|Tab 1 final|
 |Ariel Arauz|ArieGit2007|Tab 1 final|
 |Ariel Arauz|ArieGit2007|Tab 1 final|
