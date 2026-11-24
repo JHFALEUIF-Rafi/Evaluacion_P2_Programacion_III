@@ -1,4 +1,4 @@
-import main.java.logica.GestorVideojuegos;
+import logica.GestorVideojuegos;
 import modelo.Videojuego;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;

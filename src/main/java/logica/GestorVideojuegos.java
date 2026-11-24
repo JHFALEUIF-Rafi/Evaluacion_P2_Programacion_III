@@ -1,4 +1,4 @@
-package main.java.logica;
+package logica;
 
 import java.util.ArrayList;
 import modelo.Videojuego;
@@ -20,7 +20,7 @@ public class GestorVideojuegos {
     }
 
     private void cargarDatosIniciales() {
-        for (Videojuego v : logica.DatosIniciales.cargar()) {
+        for (Videojuego v : DatosIniciales.cargar()) {
             registrar(v);
         }
     }

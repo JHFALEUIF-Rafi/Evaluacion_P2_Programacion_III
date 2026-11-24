@@ -1,6 +1,6 @@
 
 import javax.swing.*;
-import main.java.logica.GestorVideojuegos;
+import logica.GestorVideojuegos;
 import modelo.Videojuego;
 
 import java.awt.event.ActionEvent;
@@ -22,12 +22,13 @@ public class Ventana {
 
     public Ventana() {
         gestor = new GestorVideojuegos();
-        StringBuilder sb = new StringBuilder();
-        for (modelo.Videojuego v : gestor.getVideojuegos()) {
-            sb.append(v.toString()).append("\n");
-        }
 
-        textArea1.setText(sb.toString());
+        PanelBusqueda panelBusqueda = new PanelBusqueda(gestor);
+        tabbedPane1.setComponentAt(1, panelBusqueda);          // reemplaza el tab "Untitled" vacío
+        tabbedPane1.setTitleAt(1, "Búsqueda y edición");
+        panelBusqueda.setAlGuardar(() -> refrescarCatalogo()); // al guardar, refresca el Tab 1
+
+        refrescarCatalogo();
         btnRegistrar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -63,11 +64,7 @@ public class Ventana {
                     Videojuego vd = new Videojuego(id, nombre, estudio, categoria, anio, 20);
                     gestor.registrar(vd);
 
-                    StringBuilder sb = new StringBuilder();
-                    for (Videojuego v : gestor.getVideojuegos()) {
-                        sb.append(v.toString()).append("\n");
-                    }
-                    textArea1.setText(sb.toString());
+                    refrescarCatalogo();
 
                     txtID.setText("");
                     txtNombre.setText("");
@@ -84,14 +81,18 @@ public class Ventana {
         btnRecargar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                StringBuilder sb = new StringBuilder();
-                for (Videojuego v : gestor.getVideojuegos()) {
-                    sb.append(v.toString()).append("\n");
-                }
-                textArea1.setText(sb.toString());
+                refrescarCatalogo();
             }
         });
 
+    }
+
+    private void refrescarCatalogo() {
+        StringBuilder sb = new StringBuilder();
+        for (Videojuego v : gestor.getVideojuegos()) {
+            sb.append(v.toString()).append("\n");
+        }
+        textArea1.setText(sb.toString());
     }
 
     public static void main(String[] args) {
