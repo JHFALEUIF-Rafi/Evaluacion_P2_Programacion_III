@@ -88,7 +88,7 @@
                   <text value="Anio lanzamiento"/>
                 </properties>
               </component>
-              <component id="7f2ad" class="javax.swing.JComboBox" binding="comboBox1" default-binding="true">
+              <component id="7f2ad" class="javax.swing.JComboBox" binding="cboCategoria">
                 <constraints>
                   <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -101,15 +101,17 @@
                   </model>
                 </properties>
               </component>
-              <component id="edb97" class="javax.swing.JTextField" binding="textField1" default-binding="true">
+              <component id="edb97" class="javax.swing.JTextField" binding="txtEstudio">
                 <constraints>
                   <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="-1"/>
                   </grid>
                 </constraints>
-                <properties/>
+                <properties>
+                  <text value=""/>
+                </properties>
               </component>
-              <component id="2b3b9" class="javax.swing.JTextField" binding="textField2" default-binding="true">
+              <component id="2b3b9" class="javax.swing.JTextField" binding="txtNombre">
                 <constraints>
                   <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="-1"/>
@@ -117,7 +119,7 @@
                 </constraints>
                 <properties/>
               </component>
-              <component id="a5afb" class="javax.swing.JSpinner" binding="spinner1" default-binding="true">
+              <component id="a5afb" class="javax.swing.JSpinner" binding="spinAnio">
                 <constraints>
                   <grid row="7" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -131,7 +133,7 @@
                   <text value="REGISTRAR"/>
                 </properties>
               </component>
-              <component id="726ac" class="javax.swing.JTextField" binding="textField3" default-binding="true">
+              <component id="726ac" class="javax.swing.JTextField" binding="txtID">
                 <constraints>
                   <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="-1"/>
