@@ -107,6 +107,12 @@ Después de registrar, editar, eliminar o votar, actualizar las vistas afectadas
 
 | Integrante | Usuario GitHub | Mensaje de commit |
 |---|---|---|
+|Ariel Arauz|ArieGit2007|Tab 1 final|
+|Anthony Iza|Anthony226|Busqueda lineal y ranking|
+|Rafel Yepez|JHFALEUIF|Creacion del repositorio|
+|Dereck Yamberla|Dereck1044|Gestor de videojuegos|
+|Michael murillo|maicolmlr|Panel 2 listo|
+|Francisco Montero||Pane 3 listo|
 | | | |
 
 Verificar que GitHub muestre correctamente la autoría. Si utilizan Git local, configurar un correo asociado a la cuenta correspondiente. No compartir cuentas.
