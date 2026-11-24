@@ -2,7 +2,7 @@
 import javax.swing.*;
 import main.java.logica.GestorVideojuegos;
 import modelo.Videojuego;
-import modelo.PanelBusqueda;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -22,8 +22,6 @@ public class Ventana {
 
     public Ventana() {
         gestor = new GestorVideojuegos();
-        PanelBusqueda panelBusqueda = new PanelBusqueda(gestor);
-        tabbedPane1.addTab("Búsqueda", PanelBusqueda);
         StringBuilder sb = new StringBuilder();
         for (modelo.Videojuego v : gestor.getVideojuegos()) {
             sb.append(v.toString()).append("\n");
