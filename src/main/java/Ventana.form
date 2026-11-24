@@ -25,11 +25,14 @@
             <properties/>
             <border type="none"/>
             <children>
-              <hspacer id="bcad0">
+              <component id="bcad0" class="javax.swing.JLabel" binding="lblCantidad">
                 <constraints>
-                  <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
-              </hspacer>
+                <properties>
+                  <text value="Cantidad de videojuegos: 0"/>
+                </properties>
+              </component>
               <component id="e9264" class="javax.swing.JButton" binding="btnRecargar">
                 <constraints>
                   <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
@@ -87,7 +90,8 @@
                     <item value="Acción"/>
                     <item value="Estrategia"/>
                     <item value="RPG"/>
-                    <item value="PlataformasSimulación"/>
+                    <item value="Plataformas"/>
+                    <item value="Simulación"/>
                   </model>
                 </properties>
               </component>
@@ -138,13 +142,9 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="bf25c" class="javax.swing.JTextArea" binding="textArea1" default-binding="true">
+                  <component id="bf25c" class="javax.swing.JList" binding="listaCatalogo">
                     <constraints/>
-                    <properties>
-                      <columns value="40"/>
-                      <rows value="30"/>
-                      <text value=""/>
-                    </properties>
+                    <properties/>
                   </component>
                 </children>
               </scrollpane>

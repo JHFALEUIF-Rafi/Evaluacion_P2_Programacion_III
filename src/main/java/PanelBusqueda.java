@@ -11,7 +11,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.JTextArea;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.JTextField;
 
 public class PanelBusqueda extends JPanel {
@@ -31,6 +33,10 @@ public class PanelBusqueda extends JPanel {
     private JTextField txtAnio;
     private JTextField txtVotos;       // bloqueado
     private JButton btnGuardar;
+    // Eliminar y votar (Persona 6)
+    private JButton btnEliminar;
+    private JSpinner spnVotos;
+    private JButton btnRestarVotos;
     // Videojuego actualmente encontrado (null si no hay ninguno)
     private Videojuego seleccionado;
     // Acción que se ejecuta después de guardar (la Persona 4 la usa para refrescar el Tab 1)
@@ -120,13 +126,23 @@ public class PanelBusqueda extends JPanel {
         formulario.add(new JLabel("Votos:"));
         formulario.add(txtVotos);
         btnGuardar = new JButton("Guardar cambios");
-        JPanel filaGuardar = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        filaGuardar.add(btnGuardar);
+        btnEliminar = new JButton("ELIMINAR VIDEOJUEGO");
+        btnEliminar.setEnabled(false); // solo se activa cuando hay un juego encontrado
+        spnVotos = new JSpinner(new SpinnerNumberModel(1, 1, 3, 1));
+        btnRestarVotos = new JButton("Restar Votos");
+        JPanel filaAcciones = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        filaAcciones.add(new JLabel("Votos a restar:"));
+        filaAcciones.add(spnVotos);
+        filaAcciones.add(btnRestarVotos);
+        filaAcciones.add(btnEliminar);
+        filaAcciones.add(btnGuardar);
         panel.add(fila, BorderLayout.NORTH);
         panel.add(formulario, BorderLayout.CENTER);
-        panel.add(filaGuardar, BorderLayout.SOUTH);
+        panel.add(filaAcciones, BorderLayout.SOUTH);
         btnBuscarCodigo.addActionListener(e -> buscarPorCodigo());
         btnGuardar.addActionListener(e -> guardarCambios());
+        btnEliminar.addActionListener(e -> eliminarSeleccionado());
+        btnRestarVotos.addActionListener(e -> restarVotos());
         return panel;
     }
     private void buscarPorCodigo() {
@@ -165,6 +181,7 @@ public class PanelBusqueda extends JPanel {
         cmbCategoria.setSelectedItem(v.getCategoria());
         txtAnio.setText(String.valueOf(v.getAnioLanzamiento()));
         txtVotos.setText(String.valueOf(v.getVotos()));
+        btnEliminar.setEnabled(true);
     }
 
     public void limpiarSeleccion() {
@@ -175,6 +192,70 @@ public class PanelBusqueda extends JPanel {
         cmbCategoria.setSelectedIndex(0);
         txtAnio.setText("");
         txtVotos.setText("");
+        btnEliminar.setEnabled(false);
+    }
+
+    // Refresca la búsqueda por texto y las otras pestañas (Tab 1 y ranking)
+    private void refrescarVistas() {
+        refrescarBusquedaTexto();
+        if (alGuardar != null) {
+            alGuardar.run();
+        }
+    }
+
+    private void eliminarSeleccionado() {
+        if (seleccionado == null) {
+            JOptionPane.showMessageDialog(this,
+                    "Primero busca un videojuego por código.",
+                    "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        int respuesta = JOptionPane.showConfirmDialog(this,
+                "¿Seguro que deseas eliminar \"" + seleccionado.getNombre() + "\"?",
+                "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+        if (respuesta != JOptionPane.YES_OPTION) {
+            return;
+        }
+        boolean eliminado = gestor.eliminar(seleccionado.getCodigoID());
+        limpiarSeleccion();
+        refrescarVistas();
+        if (eliminado) {
+            JOptionPane.showMessageDialog(this, "Videojuego eliminado correctamente.");
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "El videojuego ya no existe.",
+                    "Aviso", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+    private void restarVotos() {
+        if (seleccionado == null) {
+            JOptionPane.showMessageDialog(this,
+                    "Primero busca un videojuego por código para poder restar votos.",
+                    "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        int cantidad = (Integer) spnVotos.getValue();
+        try {
+            boolean restado = gestor.restarVotos(seleccionado.getCodigoID(), cantidad);
+            if (!restado) {
+                limpiarSeleccion();
+                refrescarVistas();
+                JOptionPane.showMessageDialog(this,
+                        "El videojuego ya no existe.",
+                        "Aviso", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(this,
+                    ex.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        cargarCampos(seleccionado); // muestra el contador actualizado
+        refrescarVistas();
+        JOptionPane.showMessageDialog(this,
+                "Se restaron " + cantidad + " voto(s). Votos actuales: " + seleccionado.getVotos());
     }
 
     public Videojuego getSeleccionado() {
@@ -198,6 +279,8 @@ public class PanelBusqueda extends JPanel {
             return;
         }
         String categoria = (String) cmbCategoria.getSelectedItem();
+        // Se guarda si el juego coincidía con el texto buscado ANTES de editarlo
+        boolean coincidiaAntes = coincideConTextoBuscado(seleccionado);
         try {
             // editar() valida todo antes de cambiar algo: si falla, no se modifica nada
             boolean editado = gestor.editar(seleccionado.getCodigoID(),
@@ -216,11 +299,26 @@ public class PanelBusqueda extends JPanel {
             return;
         }
         cargarCampos(seleccionado);
-        refrescarBusquedaTexto();
-        if (alGuardar != null) {
-            alGuardar.run();
+        boolean dejoDeCoincidir = coincidiaAntes && !coincideConTextoBuscado(seleccionado);
+        refrescarVistas(); // recalcula los resultados de texto y refresca Tab 1 y ranking
+        if (dejoDeCoincidir) {
+            limpiarSeleccion();
+            JOptionPane.showMessageDialog(this,
+                    "Videojuego actualizado correctamente.\n"
+                    + "Ya no coincide con el texto buscado, así que se recalcularon "
+                    + "los resultados y se limpió la selección.");
+            return;
         }
         JOptionPane.showMessageDialog(this,
                 "Videojuego actualizado correctamente.");
+    }
+
+    // Misma regla que la búsqueda lineal: case-sensitive, contains() en nombre o estudio
+    private boolean coincideConTextoBuscado(Videojuego v) {
+        String texto = txtTexto.getText();
+        if (texto == null || texto.trim().isEmpty()) {
+            return false;
+        }
+        return v.getNombre().contains(texto) || v.getEstudio().contains(texto);
     }
 }
