@@ -1,4 +1,4 @@
-package main.java.logica;
+package logica;
 
 import java.util.ArrayList;
 import modelo.Videojuego;
@@ -20,7 +20,7 @@ public class GestorVideojuegos {
     }
 
     private void cargarDatosIniciales() {
-        for (Videojuego v : logica.DatosIniciales.cargar()) {
+        for (Videojuego v : DatosIniciales.cargar()) {
             registrar(v);
         }
     }
@@ -93,6 +93,62 @@ public class GestorVideojuegos {
             return true;
         }
         return false;
+    }
+
+    public ArrayList<Videojuego> buscarPorTexto(String texto) {
+        ArrayList<Videojuego> resultados = new ArrayList<>();
+        if (texto == null || texto.trim().isEmpty()) {
+            return resultados;
+        }
+
+        for (Videojuego v : videojuegos) {
+            if (v.getNombre().contains(texto) || v.getEstudio().contains(texto)) {
+                resultados.add(v);
+            }
+        }
+        return resultados;
+    }
+
+    public boolean restarVotos(int codigo, int cantidad) {
+        int indice = buscarPorCodigo(codigo);
+        if (indice == -1) {
+            return false;
+        }
+
+        videojuegos.get(indice).disminuirVotos(cantidad);
+        return true;
+    }
+
+    public boolean editar(int codigo, String nuevoNombre, String nuevoEstudio, String nuevaCategoria, int nuevoAnio) {
+        int indice = buscarPorCodigo(codigo);
+        if (indice == -1) {
+            return false;
+        }
+
+        Videojuego.validarDatos(nuevoNombre, nuevoEstudio, nuevaCategoria, nuevoAnio);
+
+        Videojuego v = videojuegos.get(indice);
+        v.setNombre(nuevoNombre);
+        v.setEstudio(nuevoEstudio);
+        v.setCategoria(nuevaCategoria);
+        v.setAnioLanzamiento(nuevoAnio);
+        return true;
+    }
+
+    public ArrayList<Videojuego> obtenerRanking() {
+        ArrayList<Videojuego> copia = new ArrayList<>(videojuegos);
+        int n = copia.size();
+
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                if (copia.get(j).getVotos() < copia.get(j + 1).getVotos()) {
+                    Videojuego temp = copia.get(j);
+                    copia.set(j, copia.get(j + 1));
+                    copia.set(j + 1, temp);
+                }
+            }
+        }
+        return copia;
     }
 
 }
