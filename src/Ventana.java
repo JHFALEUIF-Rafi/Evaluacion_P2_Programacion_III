@@ -78,6 +78,13 @@ public class Ventana {
                         JOptionPane.showMessageDialog(null, "Ingresa un año válido (1950 - 2030).", "Año inválido", JOptionPane.WARNING_MESSAGE);
                         return;
                     }
+                    for (Videojuego v : gestor.getVideojuegos()) {
+                        if (v.getCodigoID() == id) {
+                            JOptionPane.showMessageDialog(null, "El ID ya existe. Ingresa uno diferente.", "ID duplicado", JOptionPane.WARNING_MESSAGE);
+                            return;
+                        }
+                    }
+
 
                     Videojuego vd = new Videojuego(id, nombre, estudio, categoria, anio, 20);
                     gestor.registrar(vd);
