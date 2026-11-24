@@ -3,6 +3,7 @@ import javax.swing.*;
 import main.java.logica.GestorVideojuegos;
 import modelo.Videojuego;
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -21,6 +22,24 @@ public class Ventana {
     private GestorVideojuegos gestor;
 
     public Ventana() {
+
+        Dimension medida = new Dimension(450, 200);
+
+        textArea1.setLineWrap(true);
+        textArea1.setWrapStyleWord(true);
+
+        Container padre = textArea1.getParent();
+        JScrollPane scroll = new JScrollPane(textArea1);
+        scroll.setPreferredSize(medida);
+        scroll.setMinimumSize(medida);
+        scroll.setMaximumSize(medida);
+
+        padre.setLayout(new FlowLayout(FlowLayout.CENTER));
+        padre.add(scroll);
+        padre.revalidate();
+        padre.repaint();
+
+
         gestor = new GestorVideojuegos();
         StringBuilder sb = new StringBuilder();
         for (modelo.Videojuego v : gestor.getVideojuegos()) {
@@ -63,12 +82,6 @@ public class Ventana {
                     Videojuego vd = new Videojuego(id, nombre, estudio, categoria, anio, 20);
                     gestor.registrar(vd);
 
-                    StringBuilder sb = new StringBuilder();
-                    for (Videojuego v : gestor.getVideojuegos()) {
-                        sb.append(v.toString()).append("\n");
-                    }
-                    textArea1.setText(sb.toString());
-
                     txtID.setText("");
                     txtNombre.setText("");
                     txtEstudio.setText("");
@@ -92,6 +105,7 @@ public class Ventana {
             }
         });
 
+
     }
 
     public static void main(String[] args) {
@@ -100,6 +114,6 @@ public class Ventana {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
-        frame.setSize(600,425);
+        frame.setSize(700,425);
     }
 }
